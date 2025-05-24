@@ -168,20 +168,26 @@
     };
 
  function updateBookmarkList() {
-    bookmarkList.innerHTML = '';
-    bookmarks.forEach(pg => {
-      const li = document.createElement('li');
-      li.className = 'flex items-center justify-between bg-white shadow p-2 rounded';
-      li.innerHTML = `
-        <span>📌 Page ${pg}</span>
-        <div>
-          <button onclick="goToPage(${pg})" class="text-blue-600 hover:underline mr-2">Go</button>
-          <button onclick="removeBookmark(${pg})" class="text-red-600 hover:underline">Delete</button>
-        </div>
-      `;
-      bookmarkList.appendChild(li);
-    });
-  }
+  bookmarkList.innerHTML = '';
+  bookmarks.forEach(pg => {
+    const li = document.createElement('li');
+    li.className = 'flex items-center justify-between bg-white shadow p-2 rounded';
+    li.innerHTML = `
+      <span>📌 Page ${pg}</span>
+      <div>
+        <button onclick="goToPage(${pg})" class="text-blue-600 hover:underline mr-2">Go</button>
+        <button onclick="removeBookmark(${pg})" class="text-red-600 hover:underline">Delete</button>
+      </div>
+    `;
+    bookmarkList.appendChild(li);
+  });
+}
+
+function removeBookmark(pg) {
+  bookmarks = bookmarks.filter(p => p !== pg);
+  updateBookmarkList();
+}
+
     async function saveBookmarks(fileId, pages) {
       const filename = `bookmarks-${fileId}.json`;
       const metadata = {

@@ -169,10 +169,10 @@
 
   function updateBookmarkList() {
   bookmarkList.innerHTML = '';
-  bookmarks.forEach(pg => {
+  bookmarks.forEach((pg, index) => {
     const li = document.createElement('li');
 
-    // Append text node
+    // Add page text
     li.appendChild(document.createTextNode(`Page ${pg} `));
 
     // Go button
@@ -185,18 +185,16 @@
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.onclick = async () => {
-      bookmarks = bookmarks.filter(b => b !== pg); // Remove from array
-      updateBookmarkList(); // Refresh UI
-      await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
+      bookmarks.splice(index, 1); // remove the page
+      updateBookmarkList();       // update UI
+      await saveBookmarks(currentFileId, bookmarks); // sync with Drive
     };
     li.appendChild(delBtn);
 
+    // Add list item to list
     bookmarkList.appendChild(li);
   });
 }
-
-
-
 
     async function saveBookmarks(fileId, pages) {
       const filename = `bookmarks-${fileId}.json`;

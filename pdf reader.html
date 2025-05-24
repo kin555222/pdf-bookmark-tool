@@ -171,7 +171,7 @@
   bookmarkList.innerHTML = '';
   bookmarks.forEach((pg, index) => {
     const li = document.createElement('li');
-    li.textContent = `Page ${pg} `;
+    li.appendChild(document.createTextNode(`Page ${pg} `));
 
     const goBtn = document.createElement('button');
     goBtn.textContent = 'Go';
@@ -181,15 +181,16 @@
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.onclick = async () => {
-      bookmarks.splice(index, 1); // Remove this bookmark
-      updateBookmarkList(); // Update UI
-      await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
+      bookmarks.splice(index, 1);
+      updateBookmarkList();
+      await saveBookmarks(currentFileId, bookmarks);
     };
     li.appendChild(delBtn);
 
     bookmarkList.appendChild(li);
   });
 }
+
 
 
 

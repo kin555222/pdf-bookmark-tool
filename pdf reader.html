@@ -169,35 +169,33 @@
 
    function updateBookmarkList() {
   bookmarkList.innerHTML = '';
-  console.log('Updating bookmarks:', bookmarks);
-
   bookmarks.forEach((pg, index) => {
     const li = document.createElement('li');
 
-    // Safely append the page number text
+    // Create text node first (does not overwrite children)
     li.appendChild(document.createTextNode(`Page ${pg} `));
 
-    // "Go" button
+    // Go button
     const goBtn = document.createElement('button');
     goBtn.textContent = 'Go';
     goBtn.onclick = () => renderPage(pg);
     li.appendChild(goBtn);
 
-    // "Delete" button
+    // Delete button
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.onclick = async () => {
-      console.log(`Clicked Delete for index ${index}, page ${pg}`);
-      bookmarks.splice(index, 1);           // Remove the bookmark
-      updateBookmarkList();                 // Update the UI
-      await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
+      bookmarks.splice(index, 1);
+      updateBookmarkList();
+      await saveBookmarks(currentFileId, bookmarks);
     };
     li.appendChild(delBtn);
 
+    // Append to list
     bookmarkList.appendChild(li);
-    console.log('Added list item:', li);
   });
 }
+
 
 
     async function saveBookmarks(fileId, pages) {

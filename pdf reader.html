@@ -167,35 +167,21 @@
       }
     };
 
-  function updateBookmarkList() {
-  bookmarkList.innerHTML = '';
-  bookmarks.forEach((pg, index) => {
-    const li = document.createElement('li');
-
-    // Add page text
-    li.appendChild(document.createTextNode(`Page ${pg} `));
-
-    // Go button
-    const goBtn = document.createElement('button');
-    goBtn.textContent = 'Go';
-    goBtn.onclick = () => renderPage(pg);
-    li.appendChild(goBtn);
-
-    // Delete button
-    const delBtn = document.createElement('button');
-    delBtn.textContent = 'Delete';
-    delBtn.onclick = async () => {
-      bookmarks.splice(index, 1); // remove the page
-      updateBookmarkList();       // update UI
-      await saveBookmarks(currentFileId, bookmarks); // sync with Drive
-    };
-    li.appendChild(delBtn);
-
-    // Add list item to list
-    bookmarkList.appendChild(li);
-  });
-}
-
+ function updateBookmarkList() {
+    bookmarkList.innerHTML = '';
+    bookmarks.forEach(pg => {
+      const li = document.createElement('li');
+      li.className = 'flex items-center justify-between bg-white shadow p-2 rounded';
+      li.innerHTML = `
+        <span>📌 Page ${pg}</span>
+        <div>
+          <button onclick="goToPage(${pg})" class="text-blue-600 hover:underline mr-2">Go</button>
+          <button onclick="removeBookmark(${pg})" class="text-red-600 hover:underline">Delete</button>
+        </div>
+      `;
+      bookmarkList.appendChild(li);
+    });
+  }
     async function saveBookmarks(fileId, pages) {
       const filename = `bookmarks-${fileId}.json`;
       const metadata = {

@@ -187,11 +187,6 @@
 }
 
 
-function removeBookmark(pg) {
-  bookmarks = bookmarks.filter(p => p !== pg);
-  updateBookmarkList();
-}
-
     async function saveBookmarks(fileId, pages) {
       const filename = `bookmarks-${fileId}.json`;
       const metadata = {

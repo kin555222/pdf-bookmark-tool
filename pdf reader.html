@@ -167,12 +167,12 @@
       }
     };
 
-   function updateBookmarkList() {
+  function updateBookmarkList() {
   bookmarkList.innerHTML = '';
   bookmarks.forEach((pg, index) => {
     const li = document.createElement('li');
 
-    // Create text node first (does not overwrite children)
+    // SAFELY append text without removing buttons
     li.appendChild(document.createTextNode(`Page ${pg} `));
 
     // Go button
@@ -185,13 +185,12 @@
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.onclick = async () => {
-      bookmarks.splice(index, 1);
-      updateBookmarkList();
-      await saveBookmarks(currentFileId, bookmarks);
+      bookmarks.splice(index, 1); // Remove bookmark
+      updateBookmarkList();       // Refresh UI
+      await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
     };
     li.appendChild(delBtn);
 
-    // Append to list
     bookmarkList.appendChild(li);
   });
 }

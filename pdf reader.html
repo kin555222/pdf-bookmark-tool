@@ -169,10 +169,10 @@
 
   function updateBookmarkList() {
   bookmarkList.innerHTML = '';
-  bookmarks.forEach((pg, index) => {
+  bookmarks.forEach(pg => {
     const li = document.createElement('li');
 
-    // SAFELY append text without removing buttons
+    // Append text node
     li.appendChild(document.createTextNode(`Page ${pg} `));
 
     // Go button
@@ -185,8 +185,8 @@
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.onclick = async () => {
-      bookmarks.splice(index, 1); // Remove bookmark
-      updateBookmarkList();       // Refresh UI
+      bookmarks = bookmarks.filter(b => b !== pg); // Remove from array
+      updateBookmarkList(); // Refresh UI
       await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
     };
     li.appendChild(delBtn);
@@ -194,6 +194,7 @@
     bookmarkList.appendChild(li);
   });
 }
+
 
 
 

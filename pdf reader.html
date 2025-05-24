@@ -167,31 +167,37 @@
       }
     };
 
-    function updateBookmarkList() {
+   function updateBookmarkList() {
   bookmarkList.innerHTML = '';
+  console.log('Updating bookmarks:', bookmarks);
+
   bookmarks.forEach((pg, index) => {
     const li = document.createElement('li');
+
+    // Safely append the page number text
     li.appendChild(document.createTextNode(`Page ${pg} `));
 
+    // "Go" button
     const goBtn = document.createElement('button');
     goBtn.textContent = 'Go';
     goBtn.onclick = () => renderPage(pg);
     li.appendChild(goBtn);
 
+    // "Delete" button
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     delBtn.onclick = async () => {
-      bookmarks.splice(index, 1);
-      updateBookmarkList();
-      await saveBookmarks(currentFileId, bookmarks);
+      console.log(`Clicked Delete for index ${index}, page ${pg}`);
+      bookmarks.splice(index, 1);           // Remove the bookmark
+      updateBookmarkList();                 // Update the UI
+      await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
     };
     li.appendChild(delBtn);
 
     bookmarkList.appendChild(li);
+    console.log('Added list item:', li);
   });
 }
-
-
 
 
     async function saveBookmarks(fileId, pages) {

@@ -38,6 +38,9 @@
     const API_KEY = 'AIzaSyDCtQi0NsCjup9X4dQIwFqo5-djCozZ_aw';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.appdata';
 
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+
     let tokenClient, gapiInited = false, gisInited = false;
     let pdfDoc = null, pageNum = 1, bookmarks = [];
     let currentFileId = null;

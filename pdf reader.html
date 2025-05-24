@@ -168,17 +168,29 @@
     };
 
     function updateBookmarkList() {
-      bookmarkList.innerHTML = '';
-      bookmarks.forEach(pg => {
-        const li = document.createElement('li');
-        li.textContent = `Page ${pg}`;
-        const btn = document.createElement('button');
-        btn.textContent = 'Go';
-        btn.onclick = () => renderPage(pg);
-        li.appendChild(btn);
-        bookmarkList.appendChild(li);
-      });
-    }
+  bookmarkList.innerHTML = '';
+  bookmarks.forEach((pg, index) => {
+    const li = document.createElement('li');
+    li.textContent = `Page ${pg} `;
+
+    const goBtn = document.createElement('button');
+    goBtn.textContent = 'Go';
+    goBtn.onclick = () => renderPage(pg);
+    li.appendChild(goBtn);
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete';
+    delBtn.onclick = async () => {
+      bookmarks.splice(index, 1); // Remove this bookmark
+      updateBookmarkList(); // Update UI
+      await saveBookmarks(currentFileId, bookmarks); // Sync to Drive
+    };
+    li.appendChild(delBtn);
+
+    bookmarkList.appendChild(li);
+  });
+}
+
 
     async function saveBookmarks(fileId, pages) {
       const filename = `bookmarks-${fileId}.json`;

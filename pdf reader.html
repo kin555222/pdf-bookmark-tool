@@ -196,20 +196,44 @@
       }
     };
 
-    function updateBookmarkList() {
-      bookmarkList.innerHTML = '';
-      bookmarks.forEach(pg => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>📌 Page ${pg}</span>
-          <div>
-            <button onclick="goToPage(${pg})" class="goBtn">Go</button>
-            <button onclick="removeBookmark(${pg})" title="Remove bookmark">×</button>
-          </div>
-        `;
-        bookmarkList.appendChild(li);
-      });
-    }
+   function updateBookmarkList() {
+  bookmarkList.innerHTML = '';
+  bookmarks.forEach(pg => {
+    const li = document.createElement('li');
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = `📌 Page ${pg}`;
+
+    const btnContainer = document.createElement('div');
+
+    const goBtn = document.createElement('button');
+    goBtn.textContent = 'Go';
+    goBtn.className = 'goBtn';
+    goBtn.addEventListener('click', () => goToPage(pg));
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '×';
+    delBtn.title = 'Remove bookmark';
+    delBtn.style.color = '#d33';
+    delBtn.style.fontWeight = 'bold';
+    delBtn.style.fontSize = '20px';
+    delBtn.style.background = 'none';
+    delBtn.style.border = 'none';
+    delBtn.style.cursor = 'pointer';
+    delBtn.style.marginLeft = '10px';
+    delBtn.addEventListener('mouseenter', () => delBtn.style.color = '#a00');
+    delBtn.addEventListener('mouseleave', () => delBtn.style.color = '#d33');
+    delBtn.addEventListener('click', () => removeBookmark(pg));
+
+    btnContainer.appendChild(goBtn);
+    btnContainer.appendChild(delBtn);
+
+    li.appendChild(textSpan);
+    li.appendChild(btnContainer);
+    bookmarkList.appendChild(li);
+  });
+}
+
 
     function goToPage(num) {
       if (num >= 1 && num <= pdfDoc.numPages) {

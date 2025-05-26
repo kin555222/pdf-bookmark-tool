@@ -9,37 +9,7 @@
     body { font-family: Arial, sans-serif; padding: 20px; }
     #pdfCanvas { border: 1px solid #ccc; max-width: 100%; }
     button { margin: 5px; padding: 10px 15px; }
-    #bookmarkList li {
-      margin-bottom: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-    #bookmarkList li > div button {
-      font-size: 20px;
-      line-height: 1;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: #d33;
-      font-weight: bold;
-    }
-    #bookmarkList li > div button:hover {
-      color: #a00;
-    }
-    #bookmarkList li > div button.goBtn {
-      color: #06c;
-      font-weight: normal;
-      font-size: 14px;
-      margin-right: 10px;
-    }
-    #bookmarkList li > div button.goBtn:hover {
-      text-decoration: underline;
-    }
+    #bookmarkList li { margin-bottom: 5px; }
   </style>
 </head>
 <body>
@@ -62,17 +32,11 @@
     <button id="addBookmark">Add Bookmark</button>
   </div>
 
-  <!-- Google Identity Services and gapi client -->
-  <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
-  <script src="https://apis.google.com/js/api.js?onload=gapiLoaded"></script>
-
-  <!-- Main app logic -->
+  <!-- Declare functions and globals BEFORE loading Google APIs -->
   <script>
     const CLIENT_ID = '310180553634-vn3t7enhg74945ev1s6lqra5l6r53249.apps.googleusercontent.com';
     const API_KEY = 'AIzaSyDCtQi0NsCjup9X4dQIwFqo5-djCozZ_aw';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.appdata';
-
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
     let tokenClient, gapiInited = false, gisInited = false;
     let pdfDoc = null, pageNum = 1, bookmarks = [];
@@ -112,7 +76,14 @@
         authorizeBtn.textContent = 'Login with Google Drive';
       }
     }
+  </script>
 
+  <!-- Load Google Identity Services (OAuth2) and gapi client after defining functions -->
+  <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
+  <script src="https://apis.google.com/js/api.js?onload=gapiLoaded"></script>
+
+  <!-- Your main app logic can go below this -->
+  <script>
     authorizeBtn.onclick = () => {
       tokenClient.callback = async (resp) => {
         if (resp.error) return console.error(resp);
@@ -200,28 +171,13 @@
       bookmarkList.innerHTML = '';
       bookmarks.forEach(pg => {
         const li = document.createElement('li');
-        li.innerHTML = `
-          <span>📌 Page ${pg}</span>
-          <div>
-            <button onclick="goToPage(${pg})" class="goBtn">Go</button>
-            <button onclick="removeBookmark(${pg})" title="Remove bookmark">×</button>
-          </div>
-        `;
+        li.textContent = `Page ${pg}`;
+        const btn = document.createElement('button');
+        btn.textContent = 'Go';
+        btn.onclick = () => renderPage(pg);
+        li.appendChild(btn);
         bookmarkList.appendChild(li);
       });
-    }
-
-    function goToPage(num) {
-      if (num >= 1 && num <= pdfDoc.numPages) {
-        pageNum = num;
-        renderPage(pageNum);
-      }
-    }
-
-    async function removeBookmark(page) {
-      bookmarks = bookmarks.filter(p => p !== page);
-      updateBookmarkList();
-      await saveBookmarks(currentFileId, bookmarks);
     }
 
     async function saveBookmarks(fileId, pages) {
